@@ -870,10 +870,10 @@ function! s:prompt(flags)
     redraw!
 
     " Restore mappings
-    cunmap <cr>
-    execute 'cunmap' g:grepper.prompt_mapping_tool
-    execute 'cunmap' g:grepper.prompt_mapping_dir
-    execute 'cunmap' g:grepper.prompt_mapping_side
+    silent! cunmap <cr>
+    execute 'silent! cunmap' g:grepper.prompt_mapping_tool
+    execute 'silent! cunmap' g:grepper.prompt_mapping_dir
+    execute 'silent! cunmap' g:grepper.prompt_mapping_side
     call s:restore_mapping(mapping_cr)
     call s:restore_mapping(mapping_tool)
     call s:restore_mapping(mapping_dir)
