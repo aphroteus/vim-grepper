@@ -1160,7 +1160,19 @@ function! s:side_create_window(flags) abort
   " write contexts to buffer
   for filename in sort(keys(regions))
     let contexts = regions[filename]
-    let file = readfile(expand(filename))
+    
+    let max_line = 0
+    for c in contexts
+      if c[2] > max_line
+        let max_line = c[2]
+      endif
+    endfor
+    
+    let file = []
+    silent! let file = readfile(expand(filename), '', max_line + 1)
+    if empty(file)
+      continue
+    endif
 
     let context = contexts[0]
     call append('$', '>>> '. filename .':'. context[0])
