@@ -416,9 +416,9 @@ function! s:requote_query(flags) abort
       let a:flags.query = (is_findstr ? '' : '-- '). s:escape_query(a:flags, a:flags.query_orig)
     else
       if a:flags.prompt_quote >= 2
-        let a:flags.query = a:flags.query[1:-2]
+        let a:flags.query = len(a:flags.query) >= 3 ? a:flags.query[1:-2] : ''
       else
-        let a:flags.query = a:flags.query[:-1]
+        let a:flags.query = len(a:flags.query) >= 1 ? a:flags.query[:-1] : ''
       endif
     endif
   endif
