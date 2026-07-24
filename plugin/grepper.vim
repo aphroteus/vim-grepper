@@ -472,11 +472,11 @@ function! s:compute_working_directory(flags) abort
       let cwd = getcwd()
       let bufdir = expand('%:p:h')
       if stridx(bufdir, cwd) != 0
-        return fnameescape(bufdir)
+        return bufdir
       endif
     elseif dir == 'file'
       let bufdir = expand('%:p:h')
-      return fnameescape(bufdir)
+      return bufdir
     elseif dir == 'cwd'
       return getcwd()
     else
@@ -490,7 +490,7 @@ endfunction
 function! s:chdir_push(work_dir)
   if !empty(a:work_dir)
     let cwd = getcwd()
-    execute 'lcd' a:work_dir
+    execute 'noautocmd lcd' fnameescape(a:work_dir)
     return cwd
   endif
   return ''
@@ -499,7 +499,7 @@ endfunction
 " s:chdir_pop() {{{2
 function! s:chdir_pop(buf_dir)
   if !empty(a:buf_dir)
-    execute 'lcd' fnameescape(a:buf_dir)
+    execute 'noautocmd lcd' fnameescape(a:buf_dir)
   endif
 endfunction
 
