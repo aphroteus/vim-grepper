@@ -1073,7 +1073,8 @@ function! s:finish_up(flags)
     execute (qf ? 'cfirst' : 'lfirst')
   endif
 
-  let has_errors = !empty(filter(list, 'v:val.valid == 0'))
+  let valid_matches = len(filter(copy(list), 'v:val.valid == 1'))
+  let has_errors = !empty(filter(copy(list), 'v:val.valid == 0'))
 
   " Also open if the side mode is off and the list contains any invalid entry.
   if a:flags.open || (has_errors && !a:flags.side)
@@ -1087,7 +1088,13 @@ function! s:finish_up(flags)
   endif
 
   redraw
-  echo printf('Found %d matches.', size)
+  if valid_matches > 0
+    echo printf('Found %d matches.', valid_matches)
+  elseif has_errors
+    echo 'Errors occurred. Check the quickfix list.'
+  else
+    echo 'No matches found.'
+  endif
 
   if a:flags.side
     call s:side(a:flags)
