@@ -953,7 +953,11 @@ function! s:run(flags)
 
   " 'cmd' and 'options' are only used for async execution.
   if has('win32')
-    let cmd = 'cmd.exe /c '. s:cmdline
+    if has('nvim')
+      let cmd = ['cmd.exe', '/s', '/c', s:cmdline]
+    else
+      let cmd = 'cmd.exe /c '. s:cmdline
+    endif
   else
     let cmd = ['sh', '-c', s:cmdline]
   endif
