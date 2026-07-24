@@ -451,13 +451,6 @@ function! s:compute_working_directory(flags) abort
   endif
   for dir in split(a:flags.dir, ',')
     if dir == 'repo'
-      if s:get_current_tool_name(a:flags) == 'git'
-        let dir = systemlist(printf('git -C %s rev-parse --show-toplevel',
-              \ shellescape(expand('%:p:h'))))
-        if !v:shell_error
-          return dir[0]
-        endif
-      endif
       for repo in g:grepper.repo
         let repopath = finddir(repo, expand('%:p:h').';')
         if empty(repopath)
@@ -465,9 +458,16 @@ function! s:compute_working_directory(flags) abort
         endif
         if !empty(repopath)
           let repopath = fnamemodify(repopath, ':h')
-          return fnameescape(repopath)
+          return repopath
         endif
       endfor
+      if s:get_current_tool_name(a:flags) == 'git'
+        let dir = systemlist(printf('git -C %s rev-parse --show-toplevel',
+              \ shellescape(expand('%:p:h'))))
+        if !v:shell_error
+          return dir[0]
+        endif
+      endif
     elseif dir == 'filecwd'
       let cwd = getcwd()
       let bufdir = expand('%:p:h')
